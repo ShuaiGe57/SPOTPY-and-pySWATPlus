@@ -118,7 +118,7 @@ class spot_swat():
     def evaluation(self):
         obs = pd.read_csv(os.path.join(cwd,'TimeSeries\\04199000.csv'))
         obs["Date"] = pd.to_datetime(obs["Date"])
-        obs = obs.loc[((obs["Date"] >= "2018-01-01") & (obs["Date"] <= "2018-12-31")),"Q"]
+        obs = obs.loc[((obs["Date"] >= "2018-01-01") & (obs["Date"] <= "2020-12-31")),"Q"]
         return obs
     def objectivefunction(self, simulation, evaluation):
         objfun = sp.objectivefunctions.nashsutcliffe(evaluation, simulation)
@@ -130,12 +130,15 @@ class spot_swat():
 proj_path = os.path.join(cwd, "TxtInOut")
 print(proj_path)
 spot_setup = spot_swat(proj_path)
-sampler = sp.algorithms.mc(spot_setup,
-                           dbname="huron", 
-                           dbformat="csv",
-                           parallel="mpi",
-                           )
+sampler = sp.algorithms.sceua(spot_setup,
+                                dbname="huron",
+                                dbformat="csv",
+                                parallel="mpi",
+                                )
 # print(describe(sampler))
-sampler.sample(repetitions=40,
-               # ngs=10,
+sampler.sample(repetitions=2000,
+               ngs=10,
+               kstop=10,
+               pcento=0.01,
+               peps=0.01
                )
