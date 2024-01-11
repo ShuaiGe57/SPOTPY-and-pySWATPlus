@@ -1,6 +1,6 @@
 print.prt: written by SWAT+ Toolbox v1.0                                   
 nyskip   day_start    yrc_start   day_end   yrc_end   interval                                     
-1            0           0           0          0          0          
+0            0           0           0          0          0          
 aa_int_cnt                                                                                         
 0                                                                                                  
 csvout    dbout         cdfout
@@ -39,7 +39,7 @@ hru-lte_nb            n           n             n              n
 hru-lte_ls            n           n             n              n
 hru-lte_pw            n           n             n              n
 channel               y           n             n              n
-channel_sd             y             n             n             n
+channel_sd                   y             n             n             n
 aquifer               n           n             n              n
 reservoir             n           n             n              n
 recall                n           n             n              n

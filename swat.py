@@ -29,7 +29,6 @@ from matplotlib import pyplot as plt
 from datetime import datetime
 cwd = os.getcwd()
 
-
 # # 用pySWATPlus定义huron_swat函数
 
 # In[10]:
@@ -130,15 +129,18 @@ class spot_swat():
 proj_path = os.path.join(cwd, "TxtInOut")
 print(proj_path)
 spot_setup = spot_swat(proj_path)
-sampler = sp.algorithms.sceua(spot_setup,
+spot_setup.reader.set_beginning_and_end_year(2018, 2020)
+spot_setup.reader.set_warmup(0)
+spot_setup.reader.enable_object_in_print_prt("channel_sd", True, False, False, False)
+sampler = sp.algorithms.mc(spot_setup,
                                 dbname="huron",
                                 dbformat="csv",
                                 parallel="mpi",
                                 )
 # print(describe(sampler))
-sampler.sample(repetitions=2000,
-               ngs=10,
-               kstop=10,
-               pcento=0.01,
-               peps=0.01
+sampler.sample(repetitions=10,
+               # ngs=10,
+               # kstop=10,
+               # pcento=0.01,
+               # peps=0.01
                )
