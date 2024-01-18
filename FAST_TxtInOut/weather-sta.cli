@@ -1,0 +1,14 @@
+weather-sta.cli: written by SWAT+ editor v2.3.3 on 2024-01-16 14:17 for SWAT+ rev.60.5.7
+name                           wgn                        pcp                        tmp                        slr                        hmd                        wnd           wnd_dir          atmo_dep  
+s41000n82600w     OHSANDUSKYWBCITY                  12pcp.pcp                  12tmp.tmp                12solar.slr                        sim                        sim              null              null  
+s41000n82700w     OHSANDUSKYWBCITY                  11pcp.pcp                  11tmp.tmp                11solar.slr                        sim                        sim              null              null  
+s41100n82600w     OHSANDUSKYWBCITY                  10pcp.pcp                  10tmp.tmp                10solar.slr                        sim                        sim              null              null  
+s41100n82700w     OHSANDUSKYWBCITY                   9pcp.pcp                   9tmp.tmp                 9solar.slr                        sim                        sim              null              null  
+s41100n82800w     OHSANDUSKYWBCITY                   8pcp.pcp                   8tmp.tmp                 8solar.slr                        sim                        sim              null              null  
+s41100n82900w     OHSANDUSKYWBCITY                   7pcp.pcp                   7tmp.tmp                 7solar.slr                        sim                        sim              null              null  
+s41200n82500w     OHSANDUSKYWBCITY                   6pcp.pcp                   6tmp.tmp                 6solar.slr                        sim                        sim              null              null  
+s41200n82600w     OHSANDUSKYWBCITY                   5pcp.pcp                   5tmp.tmp                 5solar.slr                        sim                        sim              null              null  
+s41200n82700w     OHSANDUSKYWBCITY                   4pcp.pcp                   4tmp.tmp                 4solar.slr                        sim                        sim              null              null  
+s41200n82800w     OHSANDUSKYWBCITY                   3pcp.pcp                   3tmp.tmp                 3solar.slr                        sim                        sim              null              null  
+s41300n82600w     OHSANDUSKYWBCITY                   2pcp.pcp                   2tmp.tmp                 2solar.slr                        sim                        sim              null              null  
+s41300n82700w     OHSANDUSKYWBCITY                   1pcp.pcp                   1tmp.tmp                 1solar.slr                        sim                        sim              null              null  

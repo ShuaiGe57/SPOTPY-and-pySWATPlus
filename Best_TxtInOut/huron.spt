@@ -1,0 +1,195 @@
+project_name: huron.spt
+project_path: G:\ZJWEU\5_Paper\Uncertainty\SWAT_model\Huron\Scenarios\Default\TxtInOut\huron.spt
+txtinout: G:\ZJWEU\5_Paper\Uncertainty\SWAT_model\Huron\Scenarios\Default\TxtInOut
+created: 2024-01-06T23:08:29.7807943+08:00
+last_modified: 2024-01-06T23:08:30.6999646+08:00
+run_date_start: 2017-01-01T00:00:00.0000000
+run_date_end: 2022-12-31T00:00:00.0000000
+run_warmup: 2
+subdaily_timestep: 1
+print_csv: false
+enable_subdaily: false
+current_observations: []
+print_settings:
+  channel:
+    daily: true
+    monthly: false
+    yearly: false
+    annual_average: false
+  reservoir:
+    daily: false
+    monthly: false
+    yearly: false
+    annual_average: false
+  aquifer:
+    daily: false
+    monthly: false
+    yearly: false
+    annual_average: true
+  nut_basin:
+    daily: false
+    monthly: false
+    yearly: true
+    annual_average: true
+  nut_lsu:
+    daily: false
+    monthly: false
+    yearly: false
+    annual_average: false
+  nut_hru:
+    daily: false
+    monthly: false
+    yearly: false
+    annual_average: false
+  wb_basin:
+    daily: false
+    monthly: false
+    yearly: true
+    annual_average: true
+  wb_lsu:
+    daily: false
+    monthly: false
+    yearly: false
+    annual_average: false
+  wb_hru:
+    daily: false
+    monthly: false
+    yearly: false
+    annual_average: true
+  plt_basin:
+    daily: false
+    monthly: false
+    yearly: true
+    annual_average: true
+  plt_lsu:
+    daily: false
+    monthly: false
+    yearly: false
+    annual_average: false
+  plt_hru:
+    daily: false
+    monthly: false
+    yearly: false
+    annual_average: true
+dream_settings:
+  max_repetitions: 500
+  nChains: 5
+  convergence_limit: 1.2
+  acceptance_test_option: 6
+  runs_after_convergence: 100
+  nCr: 3
+  eps: 1.0000000000000001E-05
+run_options:
+  pet_method: Penman-Monteith
+  time_units: Hours
+  routing_method: Muskingum
+auto_cal_config:
+  algorithm: Dynamically Dimensioned Search (DDS)
+  multi_site: false
+  objective_function: NSE
+  function_direction: maxmise
+  best_objective_fx_value: -999
+  nse: -999
+  dotty_max: 1
+  dotty_min: -10
+  mse: 10000
+  rmse: 10000
+  maximum_iterations: 200
+  active_chart: ''
+sensivity_settings:
+  seed: 1000
+  sensitivity_method: Sobol
+best_sensitivity_nse: -1000
+current_parameters: []
+water_balance:
+  precip: 0
+  snofall: 0
+  snomlt: 0
+  surq_gen: 0
+  latq: 0
+  wateryld: 0
+  perc: 0
+  et: 0
+  tloss: 0
+  eplant: 0
+  esoil: 0
+  surq_cont: 0
+  cn: 0
+  sw: 0
+  sw_300: 0
+  snopack: 0
+  pet: 0
+  qtile: 0
+  irr: 0
+  surq_runon: 0
+  latq_runon: 0
+  overbank: 0
+  surq_cha: 0
+  surq_res: 0
+  surq_ls: 0
+  latq_cha: 0
+  latq_res: 0
+  latq_ls: 0
+  aqu_flo: 0
+  aqu_dep_wt: 0
+  aqu_stor: 0
+  aqu_rchrg: 0
+  aqu_seep: 0
+  aqu_revap: 0
+  aqu_no3_st: 0
+  aqu_min: 0
+  aqu_orgn: 0
+  aqu_orgp: 0
+  aqu_rchrgn: 0
+  aqu_nloss: 0
+  aqu_no3gw: 0
+  aqu_seepno3: 0
+  aqu_flo_cha: 0
+  aqu_flo_res: 0
+  aqu_flo_ls: 0
+model_overview:
+  watershed_area: 0
+  number_of_lsus: 0
+  number_of_hru: 0
+  landuse_composition: {}
+  soil_composition: {}
+  hru_properties: {}
+nutrient_balance:
+  grzn: 0
+  grzp: 0
+  lab_min_p: 0
+  act_sta_p: 0
+  fertn: 0
+  fertp: 0
+  fixn: 0
+  denit: 0
+  act_nit_n: 0
+  act_sta_n: 0
+  org_lab_p: 0
+  rsd_nitorg_n: 0
+  rsd_laborg_p: 0
+  no3atmo: 0
+  nh4atmo: 0
+plant_summary:
+  lai: 0
+  bioms: 0
+  yield: 0
+  residue: 0
+  sol_tmp: 0
+  strsw: 0
+  strsa: 0
+  strstmp: 0
+  strsn: 0
+  strsp: 0
+  nplt: 0
+  percn: 0
+  pplnt: 0
+  tmx: 0
+  tmn: 0
+  tmpav: 0
+  solarad: 0
+  wndspd: 0
+  rhum: 0
+  phubas0: 0
+selected_eval_index: 0
+mannual_active_chart: none
