@@ -27,7 +27,7 @@ from pySWATPlus.TxtinoutReader import TxtinoutReader
 from pySWATPlus.FileReader import FileReader
 from matplotlib import pyplot as plt
 from datetime import datetime
-cwd = os.getcwd()
+cwd = "E:/SPOTPY-and-pySWATPlus"
 
 # # 用pySWATPlus定义huron_swat函数
 
@@ -99,7 +99,7 @@ class spot_swat():
                        prior("melt_max_min",0.1, 9.9, optguess = 9.28),
                        prior("melt_lag",0.01, 0.99, optguess = 0.253),
                        prior("snow_h2o",0.1, 499.9, optguess = 299.7),
-                       prior("cov50",0.01, 0.99, optguess = 0.623),
+                       prior("cov50",0.01, 0.90, optguess = 0.623),
                        prior("dp",0.1, 5999.9, optguess = 642.6),
                        prior("t_fc",0.1, 99.9, optguess = 9.45),
                        prior("lag",0.1, 99.9, optguess = 23.5),
@@ -207,39 +207,40 @@ proj_path = os.path.join(cwd, "Cal_TxtInOut")
 copy_path = os.path.join(cwd, "Cal_copy")
 
 # 设置SWAT模拟时间范围
-start_sim = "2018-01-01"
-end_sim = "2018-12-31"
+start_sim = "2017-01-01"
+end_sim = "2020-12-31"
 
 # 设置SWAT输出时间范围
-start_print = "2018-7-01"
-end_print = "2018-12-31"
+start_print = "2018-01-01"
+end_print = "2020-12-31"
 
 # 输出选项
 show_output = False
 delete_copy = True
 
 # 目标函数
+
 obj_func = lambda evaluation, simulation: (
-    -sp.objectivefunctions.nashsutcliffe(evaluation, simulation)
+    sp.likelihoods.gaussianLikelihoodMeasErrorOut(evaluation, simulation)
 )
 
 # 实例化及采样
 spot_setup = spot_swat(proj_path, copy_path, start_print, end_print, obj_func=obj_func,
                        show_output=show_output, delete_copy=delete_copy)
 
-spot_setup.reader.set_simulation_time(start_sim, end_sim)
-spot_setup.reader.set_print_time(start_print, end_print)
-spot_setup.reader.enable_object_in_print_prt("channel_sd", True, False, False, False)
+# spot_setup.reader.set_simulation_time(start_sim, end_sim)
+# spot_setup.reader.set_print_time(start_print, end_print)
+# spot_setup.reader.enable_object_in_print_prt("channel_sd", True, False, False, False)
 
-sampler = sp.algorithms.mc(spot_setup,
+sampler = sp.algorithms.dream(spot_setup,
                                 dbname="Cal",
                                 dbformat="csv",
                                 parallel="mpi",
                                 )
 # print(describe(sampler))
-sampler.sample(repetitions=20,
-               # ngs=8,
-               # kstop=10,
-               # pcento=0.01,
-               # peps=0.01
-               )
+r_hat = sampler.sample(repetitions=5000,
+                       nChains=7,
+                       runs_after_convergence=200,
+
+                       )
+print("============= Successfully done! =================")
