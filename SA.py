@@ -1,7 +1,6 @@
 import os
 import pandas as pd
 import numpy as np
-import spotpy as sp
 import shutil
 import mpi4py
 import sys
@@ -9,12 +8,11 @@ import multiprocessing
 
 from pySWATPlus.TxtinoutReader import TxtinoutReader
 from pySWATPlus.FileReader import FileReader
-from matplotlib import pyplot as plt
 from datetime import datetime
 from SALib.sample.morris import morris as sample
 from SALib.analyze import morris as analyze
-from dask.distributed import LocalCluster
-
+from functools import partial
+from tqdm import tqdm
 
 def parallel_swat(params_list):
     # 这里是不是只运行一组参数就行
@@ -36,15 +34,11 @@ def parallel_swat(params_list):
                                                "day": res["day"]}))
     # res.drop(columns=["Date", "mon", "day", "yr", "unit"], inplace=True)
     # todo deprecated
+    if delete_copy:
+        shutil.rmtree(result, ignore_errors=True)
     os.chdir(cwd)  # 改回当前路径
 
     return res["no3_lat"].mean()
-
-
-def save_list_to_file(lst, filename):
-    with open(filename, "w") as file:
-        for item in lst:
-            file.write(str(item) + "\n")
 
 
 if __name__ == "__main__":
@@ -153,24 +147,25 @@ if __name__ == "__main__":
                         num_levels=6,
                         seed=1,
                         )
+    np.savetxt("SA_X.txt", par, fmt="%.4f")
 
     # 源文件路径和复制文件路径
-    cwd = "E:/4_CodeLearn/Python/SPOTPY-and-pySWATPlus"
+    cwd = "E:/SPOTPY-and-pySWATPlus"
     proj_path = os.path.join(cwd, "SA_TxtInOut")
     copy_path = os.path.join(cwd, "SA_copy")
 
     # 设置SWAT模拟时间范围
     start_sim = "2017-01-01"
-    end_sim = "2017-12-31"
+    end_sim = "2020-12-31"
 
     # 设置SWAT输出时间范围
-    start_print = "2017-07-01"
-    end_print = "2017-12-31"
-    warmup = 0
+    start_print = "2018-01-01"
+    end_print = "2020-12-31"
+    warmup = 1
 
     # 输出选项
-    show_output = True
-    delete_copy = False
+    show_output = False
+    delete_copy = True
 
     reader = TxtinoutReader(proj_path)
     reader.enable_object_in_print_prt("basin_aqu", False, True, False, False)
@@ -182,7 +177,7 @@ if __name__ == "__main__":
     # 将模型运行一次的参数进行封装,存入一个变量如a
     # 创建列表，将很多类似a的变量放入，比如叫a_list
     # 注意深复制和浅复制
-    for i in range(5):
+    for i in range(num_runs):
         swat_params = {"hydrology.hyd": ("name", [(None, "lat_ttime", par[i, 0]),
                                                   (None, "can_max", par[i, 1]),
                                                   (None, "esco", par[i, 2]),
@@ -245,24 +240,12 @@ if __name__ == "__main__":
                        }
         params_list.append((cwd, reader, swat_params, copy_path, show_output, delete_copy))
 
-    print("===============55555555555555555=================")
 
+    print("===================   Start   ===================")
     p = multiprocessing.Pool()
     # 第二个参数为alist
-    result = p.map(parallel_swat, params_list)
-    save_list_to_file(result, "SA.txt")
-    Si = analyze.analyze(problem, par, result)
-    print(Si["S1"])
-    # with multiprocessing.Manager() as manager:
-    #     res = manager.list()
-    #     p1 = multiprocessing.Process(target=huron_swat,
-    #                                  args=(res, reader, swat_par_list[0], copy_path, show_output, delete_copy))
-    #     p2 = multiprocessing.Process(target=huron_swat,
-    #                                  args=(res, reader, swat_par_list[1], copy_path, show_output, delete_copy))
-    #     p1.start()
-    #     p2.start()
-    #
-    #     p1.join()
-    #     p2.join()
-    #
-    #     print(res)
+    result = list(tqdm(p.imap(parallel_swat, params_list), total=num_runs))
+    p.close()
+    p.join()
+    np.savetxt("SA_Y.txt", result, fmt="%.4f")
+    print("===============   Successfully Done   =================")
