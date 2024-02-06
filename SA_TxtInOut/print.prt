@@ -1,6 +1,6 @@
 print.prt: written by SWAT+ editor v2.3.3 on 2024-01-30 23:01 for SWAT+ rev.60.5.7
 nyskip      day_start  yrc_start  day_end   yrc_end   interval  
-0            182         2017        365        2017       1          
+1            1           2018        366        2020       1          
 aa_int_cnt  
 0           
 csvout        dbout         cdfout        

@@ -16,9 +16,10 @@ from tqdm import tqdm
 
 def parallel_swat(params_list):
     # 这里是不是只运行一组参数就行
-    cwd, reader, swat_params, copy_path, show_output, delete_copy = params_list
+    cwd, reader, swat_params, tpl_params, copy_path, show_output, delete_copy = params_list
     result = reader.copy_and_run(dir=copy_path,
                                  params=swat_params,
+                                 tpl_params=tpl_params,
                                  show_output=show_output
                                  )
     # todo 路径直接输入，不要用os拼
@@ -91,6 +92,8 @@ if __name__ == "__main__":
             "evap_adj",
             "scoef",
             "surq_exp",
+            "fert",
+            "awc"
         ],
         "bounds": [
             [0.51, 179.0],
@@ -139,18 +142,20 @@ if __name__ == "__main__":
             [0.51, 0.99],
             [0.01, 0.99],
             [1.1, 2.9],
+            [10, 100],
+            [0.01, 0.9]
         ]
     }
 
     par = sample.sample(problem,
-                        N=6,
-                        num_levels=6,
+                        N=2,
+                        num_levels=2,
                         seed=1,
                         )
     np.savetxt("SA_X.txt", par, fmt="%.4f")
 
     # 源文件路径和复制文件路径
-    cwd = "E:/SPOTPY-and-pySWATPlus"
+    cwd = "E:\\4_CodeLearn\\Python\\SPOTPY-and-pySWATPlus"
     proj_path = os.path.join(cwd, "SA_TxtInOut")
     copy_path = os.path.join(cwd, "SA_copy")
 
@@ -238,7 +243,10 @@ if __name__ == "__main__":
                                                    ],
                                           ),
                        }
-        params_list.append((cwd, reader, swat_params, copy_path, show_output, delete_copy))
+        tpl_params = {"soils.sol.tpl": {"awc": par[i, 46]},
+                      "lum.dtl.tpl": {"fert": par[i, 47]}
+                      }
+        params_list.append((cwd, reader, swat_params, tpl_params, copy_path, show_output, delete_copy))
 
 
     print("===================   Start   ===================")
