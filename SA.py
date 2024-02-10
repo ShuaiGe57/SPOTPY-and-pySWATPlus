@@ -189,14 +189,15 @@ if __name__ == "__main__":
     }
 
     par = sample.sample(problem,
-                        N=6,
+                        N=100,
                         num_levels=6,
+                        optimal_trajectories=20,
                         seed=1,
                         )
     np.savetxt("SA_X.txt", par, fmt="%.4f")
 
     # 源文件路径和复制文件路径
-    cwd = "E:\\4_CodeLearn\\Python\\SPOTPY-and-pySWATPlus"
+    cwd = "E:\\SPOTPY-and-pySWATPlus"
     proj_path = os.path.join(cwd, "SA_TxtInOut")
     copy_path = os.path.join(cwd, "SA_copy")
 
