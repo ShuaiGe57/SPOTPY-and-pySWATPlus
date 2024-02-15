@@ -1,2 +1,0 @@
- Huron                     SWAT+ Jun 13 2023       MODULAR Rev 2023.60.5.7                                
-          hru       year         mon         day     operation   lu_before         lu_after

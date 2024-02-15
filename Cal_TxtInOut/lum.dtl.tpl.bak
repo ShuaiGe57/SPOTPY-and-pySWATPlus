@@ -200,8 +200,8 @@ p_stress                   hru         0              null                 -    
 plant_gro                  hru         0                 y                 -       1.00000         =         =       !plant is growing
 phu_plant                  hru         0           phu_mat                 -       1.05000         <         <       !heat units to maturity - don't fertilize after plant reaches maturity
 act_typ                    obj   obj_num              name            option         const        const2                fp  outcome           
-fertilize                  hru         0        side_dress            elem_n      50.00000       5.00000         broadcast  y   n   
-fertilize                  hru         0        side_dress            elem_p      50.00000       5.00000         broadcast  n   y   
+fertilize                  hru         0        side_dress            elem_n      #fert#       5.0000         broadcast  y   n   
+fertilize                  hru         0        side_dress            elem_p      50       5.0000         broadcast  n   y   
 
 name                     conds      alts      acts       !inject 0.33 kg/ha of pesticide ffa randomly (unformly distributed) to 30% (0.3) of fields between day 121 and 181 - 1 time per year
 pst_unif                     1         1         1  

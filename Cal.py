@@ -27,22 +27,25 @@ from pySWATPlus.TxtinoutReader import TxtinoutReader
 from pySWATPlus.FileReader import FileReader
 from matplotlib import pyplot as plt
 from datetime import datetime
-cwd = "E:/SPOTPY-and-pySWATPlus"
+
+# cwd = "E:/SPOTPY-and-pySWATPlus"
+cwd = "E:/4_CodeLearn/Python/SPOTPY-and-pySWATPlus"
 
 # # 用pySWATPlus定义huron_swat函数
 
 # In[10]:
 
 
-def huron_swat(reader, params, copy_path, show_output=False, delete_copy=True):
+def huron_swat(reader, params, tpl_params, copy_path, show_output=False, delete_copy=True):
     result = reader.copy_and_run(dir=copy_path,
                                  params=params,
+                                 tpl_params=tpl_params,
                                  show_output=show_output
                                  )
-    reader = FileReader(os.path.join(result, "channel_sd_day.txt"),
-                        has_units = True,
+    reader = FileReader(os.path.join(result, "basin_aqu_mon.txt"),
+                        has_units=True,
                         index=None,
-                        usecols=["mon", "day", "yr", "unit", "flo_out"],
+                        usecols=["mon", "day", "yr", "unit", "no3_lat"],
                         filter_by={"unit": 1}
                         )
     res = reader.df
@@ -52,7 +55,7 @@ def huron_swat(reader, params, copy_path, show_output=False, delete_copy=True):
     res.drop(columns=["mon", "day", "yr", "unit"], inplace=True)
     if delete_copy:
         shutil.rmtree(result, ignore_errors=True)
-    os.chdir(cwd) #改回当前路径
+    os.chdir(cwd)  # 改回当前路径
     return res
 
 
@@ -71,134 +74,188 @@ class spot_swat():
         self.obj_func = obj_func
         self.show_output = show_output
         self.delete_copy = delete_copy
-        self.params = [prior("lat_ttime",0.51, 179.0, optguess = 39.70),
-                       prior("can_max",0.01, 99.9, optguess = 89.84),
-                       prior("esco",0.01,0.99, optguess = 0.018),
-                       prior("epco",0.01, 0.99, optguess = 0.243),
-                       prior("cn3_swf",0.01, 0.99, optguess = 0.613),
-                       prior("perco",0.01, 0.99, optguess = 0.705),
-                       prior("pet_co",0.71, 1.29, optguess = 0.79),
-                       prior("latq_co",0.01, 0.99, optguess = 0.945),
-                       prior("cn_a",30.0, 70.0, optguess = 49.2),
-                       prior("cn_b",50.0, 80.0, optguess = 62.2),
-                       prior("cn_c",70.0, 90.0, optguess = 89.3),
-                       prior("cn_d",80.0, 95.0, optguess = 90.5),
-                       prior("gw_flo",0.0, 2.0, optguess = 1.80),
-                       prior("dep_bot",5.0, 50.0, optguess = 27.5),
-                       prior("dep_wt",2.0, 20.0, optguess = 18.6),
-                       prior("flo_dist",10.0, 200.0, optguess = 76.6),
-                       prior("bf_max",0.11, 1.99, optguess =  1.49),
-                       prior("alpha_bf",0.01, 0.99, optguess =  0.812),
-                       prior("revap",0.021, 0.199, optguess = 0.119),
-                       prior("rchg_dp",0.001, 0.100, optguess = 0.014),
-                       prior("spec_yld",0.01, 0.49, optguess = 0.454),
-                       prior("flo_min",0.1, 49.0, optguess = 23.9),
-                       prior("revap_min",0.1, 49.0, optguess = 45.1),
-                       prior("fall_tmp",-4.9, 4.9, optguess = -4.76),
-                       prior("melt_tmp",-4.9, 4.9, optguess = 0.87),
-                       prior("melt_max_min",0.1, 9.9, optguess = 9.28),
-                       prior("melt_lag",0.01, 0.99, optguess = 0.253),
-                       prior("snow_h2o",0.1, 499.9, optguess = 299.7),
-                       prior("cov50",0.01, 0.90, optguess = 0.623),
-                       prior("dp",0.1, 5999.9, optguess = 642.6),
-                       prior("t_fc",0.1, 99.9, optguess = 9.45),
-                       prior("lag",0.1, 99.9, optguess = 23.5),
-                       prior("rad",3.1, 39.9, optguess = 21.0),
-                       prior("dist",7601, 29999, optguess = 10673.9),
-                       prior("drain",10.1, 50.9, optguess = 16.6),
-                       prior("pump",0.1, 9.9, optguess = 8.80),
-                       prior("lat_kast",0.02, 3.99, optguess = 3.82),
-                       prior("lai_noevap",0.1, 9.9, optguess = 7.75),
-                       prior("sw_init",0.01, 0.99, optguess = 0.021),
-                       prior("surq_lag",1.1, 23.9, optguess = 13.1),
-                       prior("msk_co1",0.1, 9.9, optguess = 2.49),
-                       prior("msk_co2",0.1, 9.9, optguess = 5.99),
-                       prior("msk_x",0.01, 0.29, optguess = 0.068),
-                       prior("evap_adj",0.51, 0.99, optguess = 0.685),
-                       prior("scoef",0.01, 0.99, optguess = 0.882),
-                       prior("surq_exp",1.1, 2.9, optguess =  1.61),
+
+        self.params = [prior('alpha_bf', 0.0001, 0.9999),  # 0
+                       prior('bf_max', 0.0001, 1.9999),
+                       prior('dep_bot', 0.0001, 9.9999),
+                       prior('dep_wt', 0.0001, 9.9999),
+                       prior('flo_dist', 0.0001, 199.9999),
+                       prior('flo_min', 0.0001, 49.9999),
+                       prior('gw_flo', 0.0001, 1.9999),
+                       prior('no3_n', 0.0001, 999.9999),
+                       prior('rchg_dp', 0.0001, 0.9999),
+                       prior('revap', 0.0201, 0.1999),  # 9
+                       prior('revap_min', 0.0001, 49.9999),
+                       prior('spec_yld', 0.0001, 0.4999),
+                       prior('hl_no3n', 0.0001, 199.9999),
+                       prior('cn_a', 30.0001, 69.9999),
+                       prior('cn_b', 50.0001, 79.9999),
+                       prior('cn_c', 70.0001, 89.9999),
+                       prior('cn_d', 80.0001, 94.9999),
+                       prior('can_max', 0.0001, 99.9999),
+                       prior('cn3_swf', 0.0001, 0.9999),
+                       prior('epco', 0.0001, 0.9999),  # 19
+                       prior('esco', 0.0001, 0.9999),
+                       prior('lat_ttime', 0.5001, 179.9999),
+                       prior('latq_co', 0.0001, 0.9999),
+                       prior('perco', 0.0001, 0.9999),
+                       prior('pet_co', 0.7001, 1.2999),
+                       prior('exp_co', 0.0001, 0.9999),
+                       prior('fr_hum_act', 0.0001, 0.9999),
+                       prior('hum_c_n', 8.0001, 11.9999),
+                       prior('nitrate', 0.0001, 99.9999),
+                       prior('ovn', 0.0101, 0.6999),  # 29
+                       prior('denit_exp', 0.0001, 2.9999),
+                       prior('denit_frac', 0.0001, 0.9999),
+                       prior('evap_adj', 0.5001, 0.9999),
+                       prior('lai_noevap', 0.0001, 9.9999),
+                       prior('msk_co1', 0.0001, 9.9999),
+                       prior('msk_co2', 0.0001, 9.9999),
+                       prior('msk_x', 0.0001, 0.2999),
+                       prior('n_fix_max', 1.0001, 19.9999),
+                       prior('n_perc', 0.0001, 0.9999),
+                       prior('n_uptake', 0.0001, 99.9999),  # 39
+                       prior('nperco_lchtile', 0.0001, 0.9999),
+                       prior('orgn_min', 0.0011, 0.0029),
+                       prior('rsd_cover', 0.1001, 0.4999),
+                       prior('rsd_decay', 0.0001, 0.0499),
+                       prior('rsd_decomp', 0.0201, 0.0999),
+                       prior('scoef', 0.0001, 0.9999),
+                       prior('surq_exp', 1.0001, 2.9999),
+                       prior('surq_lag', 1.0001, 23.9999),
+                       prior('sw_init', 0.0001, 0.9999),
+                       prior('cov50', 0.0001, 0.90),  # 49
+                       prior('fall_tmp', -4.9999, 4.9999),
+                       prior('melt_max_min', 0.0001, 9.9999),
+                       prior('melt_tmp', -4.9999, 4.9999),
+                       prior('snow_h2o', 0.0001, 499.9999),
+                       prior('snow_init', 0.0001, 999.9999),
+                       prior('tmp_lag', 0.0001, 0.9999),
+                       prior('dist', 7600.0001, 29999.9999),
+                       prior('dp', 0.0001, 5999.9999),
+                       prior('drain', 10.0001, 50.9999),
+                       prior('lag', 0.0001, 99.9999),  # 59
+                       prior('lat_kast', 0.0101, 3.9999),
+                       prior('pump', 0.0001, 9.9999),
+                       prior('rad', 3.0001, 39.9999),
+                       prior('t_fc', 0.0001, 99.9999),
+                       prior('fert', 0.0001, 999.9999),
+                       prior('rsd_init', 0.0001, 9999.9999),
+                       prior('awc', 0.0001, 0.9999),
+                       prior('soil_k', 0.0001, 1999.9999),
                        ]
+
     def parameters(self):
         return sp.parameter.generate(self.params)
 
     def simulation(self, vector):
         par = np.array(vector)
-        swat_params = {"hydrology.hyd":("name", [(None,"lat_ttime", par[0]),
-                                                 (None,"can_max", par[1]),
-                                                 (None,"esco", par[2]),
-                                                 (None,"epco", par[3]),
-                                                 (None,"cn3_swf", par[4]),
-                                                 (None,"perco", par[5]),
-                                                 (None,"pet_co", par[6]),
-                                                 (None,"latq_co", par[7]),
-                                                 ],
-                                        ),
-                       "cntable.lum":("description", [(None,"cn_a", par[8]),
-                                                      (None,"cn_b", par[9]),
-                                                      (None,"cn_c", par[10]),
-                                                      (None,"cn_d", par[11]),
-                                                      ],
-                                      ),
-                       "aquifer.aqu":("name", [(None, "gw_flo", par[12]),
-                                               (None, "dep_bot", par[13]),
-                                               (None, "dep_wt", par[14]),
-                                               (None, "flo_dist", par[15]),
-                                               (None, "bf_max", par[16]),
-                                               (None, "alpha_bf", par[17]),
-                                               (None, "revap", par[18]),
-                                               (None, "rchg_dp", par[19]),
-                                               (None, "spec_yld", par[20]),
-                                               (None, "flo_min", par[21]),
-                                               (None, "revap_min", par[22]),
-                                               ],
-                                      ),
-                       "snow.sno":("name", [(None, "fall_tmp", par[23]),
-                                            (None, "melt_tmp", par[24]),
-                                            (None, "melt_max", par[25]),
-                                            (None, "melt_min", par[25]),
-                                            (None, "tmp_lag", par[26]),
-                                            (None, "snow_h2o", par[27]),
-                                            (None, "cov50", par[28]),
-                                            ],
-                                   ),
-                       "tiledrain.str":("name", [(None, "dp", par[29]),
-                                                 (None, "t_fc", par[30]),
-                                                 (None, "lag", par[31]),
-                                                 (None, "rad", par[32]),
-                                                 (None, "dist", par[33]),
-                                                 (None, "drain", par[34]),
-                                                 (None, "pump", par[35]),
-                                                 (None, "lat_ksat", par[36]),
-                                                 ],
-                                        ),
-                       "parameters.bsn":("igen", [(None, "lai_noevap", par[37]),
-                                                  (None, "sw_init", par[38]),
-                                                  (None, "surq_lag", par[39]),
-                                                  (None, "msk_co1", par[40]),
-                                                  (None, "msk_co2", par[41]),
-                                                  (None, "msk_x", par[42]),
-                                                  (None, "evap_adj", par[43]),
-                                                  (None, "scoef", par[44]),
-                                                  (None, "surq_exp", par[45]),
+        params = {"aquifer.aqu": ("name", [(None, 'alpha_bf', par[0]),
+                                           (None, 'bf_max', par[1]),
+                                           (None, 'dep_bot', par[2]),
+                                           (None, 'dep_wt', par[3]),
+                                           (None, 'flo_dist', par[4]),
+                                           (None, 'flo_min', par[5]),
+                                           (None, 'gw_flo', par[6]),
+                                           (None, 'no3_n', par[7]),
+                                           (None, 'rchg_dp', par[8]),
+                                           (None, 'revap', par[9]),
+                                           (None, 'revap_min', par[10]),
+                                           (None, 'spec_yld', par[11]),
+                                           (None, 'hl_no3n', par[12]),
+                                           ],
+                                  ),
+                  "cntable.lum": ("description", [(None, "cn_a", par[13]),
+                                                  (None, "cn_b", par[14]),
+                                                  (None, "cn_c", par[15]),
+                                                  (None, "cn_d", par[16]),
                                                   ],
-                                         ),
-                       }
-        sim = huron_swat(self.reader, swat_params, self.copy_path,
+                                  ),
+                  "hydrology.hyd": ("name", [(None, 'can_max', par[17]),
+                                             (None, 'cn3_swf', par[18]),
+                                             (None, 'epco', par[19]),
+                                             (None, 'esco', par[20]),
+                                             (None, 'lat_ttime', par[21]),
+                                             (None, 'latq_co', par[22]),
+                                             (None, 'perco', par[23]),
+                                             (None, 'pet_co', par[24]),
+                                             ],
+                                    ),
+                  "nutrients.sol": ("name", [(None, 'exp_co', par[25]),
+                                             (None, 'fr_hum_act', par[26]),
+                                             (None, 'hum_c_n', par[27]),
+                                             (None, 'nitrate', par[28]),
+                                             ],
+                                    ),
+                  "ovn_table.lum": ("name", [(None, 'ovn_mean', par[29]),
+                                             (None, 'ovn_min', par[29]),
+                                             (None, 'ovn_max', par[29])
+                                             ],
+                                    ),
+                  "parameters.bsn": ("igen", [(None, 'denit_exp', par[30]),
+                                              (None, 'denit_frac', par[31]),
+                                              (None, 'evap_adj', par[32]),
+                                              (None, 'lai_noevap', par[33]),
+                                              (None, 'msk_co1', par[34]),
+                                              (None, 'msk_co2', par[35]),
+                                              (None, 'msk_x', par[36]),
+                                              (None, 'n_fix_max', par[37]),
+                                              (None, 'n_perc', par[38]),
+                                              (None, 'n_uptake', par[39]),
+                                              (None, 'nperco_lchtile', par[40]),
+                                              (None, 'orgn_min', par[41]),
+                                              (None, 'rsd_cover', par[42]),
+                                              (None, 'rsd_decay', par[43]),
+                                              (None, 'rsd_decomp', par[44]),
+                                              (None, 'scoef', par[45]),
+                                              (None, 'surq_exp', par[46]),
+                                              (None, 'surq_lag', par[47]),
+                                              (None, 'sw_init', par[48]),
+                                              ],
+                                     ),
+                  "snow.sno": ("name", [(None, 'cov50', par[49]),
+                                        (None, 'fall_tmp', par[50]),
+                                        (None, 'melt_max', par[51]),
+                                        (None, 'melt_min', par[51]),
+                                        (None, 'melt_tmp', par[52]),
+                                        (None, 'snow_h2o', par[53]),
+                                        (None, 'snow_init', par[54]),
+                                        (None, 'tmp_lag', par[55]),
+                                        ],
+                               ),
+                  "tiledrain.str": ("name", [(None, 'dist', par[56]),
+                                             (None, 'dp', par[57]),
+                                             (None, 'drain', par[58]),
+                                             (None, 'lag', par[59]),
+                                             (None, 'lat_ksat', par[60]),
+                                             (None, 'pump', par[61]),
+                                             (None, 'rad', par[62]),
+                                             (None, 't_fc', par[63]),
+                                             ],
+                                    ),
+
+                  }
+        tpl_params = {"lum.dtl.tpl": {"fert": par[64]},
+                      "plant.ini.tpl": {"rsd_init": par[65]},
+                      "soils.sol.tpl": {"awc": par[66],
+                                        "soil_k": par[67]}
+                      }
+        sim = huron_swat(self.reader, params, tpl_params, self.copy_path,
                          show_output=self.show_output, delete_copy=self.delete_copy)
-        return sim["flo_out"]
+        return sim["no3_lat"] * 90643.0
 
     def evaluation(self):
-        obs = pd.read_csv(os.path.join(cwd,'TimeSeries\\04199000.csv'))
+        obs = pd.read_csv(os.path.join(cwd, 'TimeSeries\\monthly_load.csv'))
         obs["Date"] = pd.to_datetime(obs["Date"])
-        obs = obs.loc[((obs["Date"] >= self.start) & (obs["Date"] <= self.end)),"Q"]
+        obs = obs.loc[((obs["Date"] >= self.start) & (obs["Date"] <= self.end)), "Load_COND_min"]
         return obs
+
     def objectivefunction(self, simulation, evaluation):
         if not self.obj_func:
             like = sp.objectivefunctions.nashsutcliffe(evaluation, simulation)
         else:
             like = self.obj_func(evaluation, simulation)
         return like
-    
 
 
 # In[12]:
@@ -221,7 +278,7 @@ delete_copy = True
 # 目标函数
 
 obj_func = lambda evaluation, simulation: (
-    sp.likelihoods.gaussianLikelihoodMeasErrorOut(evaluation, simulation)
+    -sp.objectivefunctions.nashsutcliffe(evaluation, simulation)
 )
 
 # 实例化及采样
@@ -232,15 +289,13 @@ spot_setup = spot_swat(proj_path, copy_path, start_print, end_print, obj_func=ob
 # spot_setup.reader.set_print_time(start_print, end_print)
 # spot_setup.reader.enable_object_in_print_prt("channel_sd", True, False, False, False)
 
-sampler = sp.algorithms.dream(spot_setup,
-                                dbname="Cal",
-                                dbformat="csv",
-                                parallel="mpi",
-                                )
+sampler = sp.algorithms.lhs(spot_setup,
+                              dbname="Cal",
+                              dbformat="csv",
+                              parallel="mpi",
+                              )
 # print(describe(sampler))
-r_hat = sampler.sample(repetitions=5000,
-                       nChains=7,
-                       runs_after_convergence=200,
-
+r_hat = sampler.sample(repetitions=1000,
+                       # ngs=70,
                        )
 print("============= Successfully done! =================")
