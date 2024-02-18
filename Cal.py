@@ -245,9 +245,9 @@ class spot_swat():
         return sim["no3_lat"] * 90643.0
 
     def evaluation(self):
-        obs = pd.read_csv(os.path.join(cwd, 'TimeSeries\\monthly_load.csv'))
+        obs = pd.read_csv(os.path.join(cwd,'TimeSeries\\monthly_load.csv'))
         obs["Date"] = pd.to_datetime(obs["Date"])
-        obs = obs.loc[((obs["Date"] >= self.start) & (obs["Date"] <= self.end)), "Load_COND_min"]
+        obs = obs.loc[((obs["Date"] >= self.start) & (obs["Date"] <= self.end)),("Load_COND_min", "Load_COND_max")]
         return obs
 
     def objectivefunction(self, simulation, evaluation):
@@ -277,9 +277,14 @@ delete_copy = True
 
 # 目标函数
 
-obj_func = lambda evaluation, simulation: (
-    -sp.objectivefunctions.nashsutcliffe(evaluation, simulation)
-)
+def obj_func(evaluation, simulation):
+    e = np.where(simulation < evaluation.iloc[:, 0],
+                 evaluation.iloc[:, 0] - simulation,
+                 np.where(simulation > evaluation.iloc[:, 1],
+                          evaluation.iloc[:, 1] - simulation,
+                          0)
+                 )
+    return np.sqrt(np.mean(e**2))
 
 # 实例化及采样
 spot_setup = spot_swat(proj_path, copy_path, start_print, end_print, obj_func=obj_func,
@@ -289,13 +294,13 @@ spot_setup = spot_swat(proj_path, copy_path, start_print, end_print, obj_func=ob
 # spot_setup.reader.set_print_time(start_print, end_print)
 # spot_setup.reader.enable_object_in_print_prt("channel_sd", True, False, False, False)
 
-sampler = sp.algorithms.lhs(spot_setup,
+sampler = sp.algorithms.rope(spot_setup,
                               dbname="Cal",
                               dbformat="csv",
                               parallel="mpi",
                               )
 # print(describe(sampler))
-r_hat = sampler.sample(repetitions=1000,
+r_hat = sampler.sample(repetitions=1200,
                        # ngs=70,
                        )
 print("============= Successfully done! =================")
