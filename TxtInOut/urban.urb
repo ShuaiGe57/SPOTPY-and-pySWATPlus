@@ -1,4 +1,4 @@
-urban.urb: written by SWAT+ editor v2.3.3 on 2024-02-19 12:29 for SWAT+ rev.60.5.7
+urban.urb: written by SWAT+ editor v2.3.3 on 2024-02-20 10:44 for SWAT+ rev.60.5.7
 name                  frac_imp   frac_dc_imp      curb_den      urb_wash      dirt_max     t_halfmax     conc_totn     conc_totp     conc_no3n        urb_cn  description
 urhd                   0.60000       0.44000       0.24000       0.18000     225.00000       0.75000     550.00000     223.00000       7.20000      98.00000  Residential-High Density
 urmd                   0.38000       0.30000       0.24000       0.18000     225.00000       0.75000     550.00000     223.00000       7.20000      98.00000  Residential-Medium Density

@@ -1,4 +1,4 @@
-weather-wgn.cli: written by SWAT+ editor v2.3.3 on 2024-02-19 12:29 for SWAT+ rev.60.5.7
+weather-wgn.cli: written by SWAT+ editor v2.3.3 on 2024-02-20 10:44 for SWAT+ rev.60.5.7
 OHFREDERICKTOWNSWPL            40.48000     -82.53000     326.10001        10  
  tmp_max_ave   tmp_min_ave    tmp_max_sd    tmp_min_sd       pcp_ave        pcp_sd      pcp_skew       wet_dry       wet_wet      pcp_days       pcp_hhr       slr_ave       dew_ave       wnd_ave  
      0.87000      -9.61000       6.72000       7.66000      71.80000       8.90000       2.32000       0.31000       0.46000      11.31000       5.30000       5.32000      -5.39000       5.60000  

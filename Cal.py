@@ -20,6 +20,7 @@ import os
 import pandas as pd
 import numpy as np
 import spotpy as sp
+from spotpy.likelihoods import gaussianLikelihoodMeasErrorOut as gauss
 import shutil
 import mpi4py
 import sys
@@ -29,7 +30,7 @@ from matplotlib import pyplot as plt
 from datetime import datetime
 
 # cwd = "E:/SPOTPY-and-pySWATPlus"
-cwd = "E:/4_CodeLearn/Python/SPOTPY-and-pySWATPlus"
+cwd = "E:/BaiduSyncdisk/Code/Python/SPOTPY-and-pySWATPlus"
 
 # # 用pySWATPlus定义huron_swat函数
 
@@ -139,9 +140,18 @@ class spot_swat():
                        prior('pump', 0.0001, 9.9999),
                        prior('rad', 3.0001, 39.9999),
                        prior('t_fc', 0.0001, 99.9999),
+                       prior('fert_1', 0.0001, 999.9999),
+                       prior('fert_2', 0.0001, 999.9999),
+                       prior('fert_3', 0.0001, 999.9999),
+                       prior('fert_4', 0.0001, 999.9999),
                        prior('fert_5', 0.0001, 999.9999),
                        prior('fert_6', 0.0001, 999.9999),
                        prior('fert_7', 0.0001, 999.9999),
+                       prior('fert_8', 0.0001, 999.9999),
+                       prior('fert_9', 0.0001, 999.9999),
+                       prior('fert_10', 0.0001, 999.9999),
+                       prior('fert_11', 0.0001, 999.9999),
+                       prior('fert_12', 0.0001, 999.9999),
                        prior('rsd_init', 0.0001, 9999.9999),
                        prior('awc', 0.0001, 0.9999),
                        prior('soil_k', 0.0001, 1999.9999),
@@ -236,13 +246,22 @@ class spot_swat():
                                    ),
 
                   }
-        tpl_params = {"management.sch.tpl": {"fert_5": par[64],
-                                             "fert_6": par[65],
-                                             "fert_7": par[66],
+        tpl_params = {"management.sch.tpl": {"fert_1": par[64],
+                                             "fert_2": par[65],
+                                             "fert_3": par[66],
+                                             "fert_4": par[67],
+                                             "fert_5": par[68],
+                                             "fert_6": par[69],
+                                             "fert_7": par[70],
+                                             "fert_8": par[71],
+                                             "fert_9": par[72],
+                                             "fert_10": par[73],
+                                             "fert_11": par[74],
+                                             "fert_12": par[75],
                                              },
-                      "plant.ini.tpl": {"rsd_init": par[67]},
-                      "soils.sol.tpl": {"awc": par[68],
-                                        "soil_k": par[69]},
+                      "plant.ini.tpl": {"rsd_init": par[76]},
+                      "soils.sol.tpl": {"awc": par[77],
+                                        "soil_k": par[78]},
                       }
         sim = huron_swat(self.reader, params, tpl_params, self.copy_path,
                          show_output=self.show_output, delete_copy=self.delete_copy)
@@ -287,7 +306,8 @@ def obj_func(evaluation, simulation):
                           evaluation.iloc[:, 1] - simulation,
                           0)
                  )
-    return -np.sqrt(np.mean(e**2))
+    o = np.zeros_like(e)
+    return gauss(o, e)
 
 # 实例化及采样
 spot_setup = spot_swat(proj_path, copy_path, start_print, end_print, obj_func=obj_func,
@@ -297,13 +317,13 @@ spot_setup = spot_swat(proj_path, copy_path, start_print, end_print, obj_func=ob
 # spot_setup.reader.set_print_time(start_print, end_print)
 # spot_setup.reader.enable_object_in_print_prt("channel_sd", True, False, False, False)
 
-sampler = sp.algorithms.rope(spot_setup,
+sampler = sp.algorithms.dream(spot_setup,
                               dbname="Cal",
                               dbformat="csv",
                               parallel="mpi",
                               )
 # print(describe(sampler))
-sampler.sample(repetitions=1200,
+r_hat = sampler.sample(repetitions=1000,
                        # ngs=70,
                        )
 print("============= Successfully done! =================")

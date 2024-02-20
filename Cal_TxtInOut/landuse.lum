@@ -1,4 +1,4 @@
-landuse.lum: written by SWAT+ editor v2.3.3 on 2024-02-19 12:29 for SWAT+ rev.60.5.7
+landuse.lum: written by SWAT+ editor v2.3.3 on 2024-02-20 10:44 for SWAT+ rev.60.5.7
 name                         cal_group          plnt_com                                        mgt               cn2         cons_prac             urban            urb_ro           ov_mann              tile               sep               vfs              grww               bmp  
 crgr_lum                          null         crgr_comm                                   crgr_rot        rc_strow_g     up_down_slope              null              null    convtill_nores         mw24_1000              null              null              null              null  
 frsd_lum                          null         frsd_comm                                       null            wood_f     up_down_slope              null              null        forest_med              null              null              null              null              null  
