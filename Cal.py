@@ -75,7 +75,7 @@ class spot_swat():
         self.show_output = show_output
         self.delete_copy = delete_copy
 
-        self.params = [prior('alpha_bf', 0.0001, 0.9999),  # 0
+        self.params = [prior('alpha_bf', 0.0001, 0.9999), #0
                        prior('bf_max', 0.0001, 1.9999),
                        prior('dep_bot', 0.0001, 9.9999),
                        prior('dep_wt', 0.0001, 9.9999),
@@ -84,7 +84,7 @@ class spot_swat():
                        prior('gw_flo', 0.0001, 1.9999),
                        prior('no3_n', 0.0001, 999.9999),
                        prior('rchg_dp', 0.0001, 0.9999),
-                       prior('revap', 0.0201, 0.1999),  # 9
+                       prior('revap', 0.0201, 0.1999), #9
                        prior('revap_min', 0.0001, 49.9999),
                        prior('spec_yld', 0.0001, 0.4999),
                        prior('hl_no3n', 0.0001, 199.9999),
@@ -94,7 +94,7 @@ class spot_swat():
                        prior('cn_d', 80.0001, 94.9999),
                        prior('can_max', 0.0001, 99.9999),
                        prior('cn3_swf', 0.0001, 0.9999),
-                       prior('epco', 0.0001, 0.9999),  # 19
+                       prior('epco', 0.0001, 0.9999), #19
                        prior('esco', 0.0001, 0.9999),
                        prior('lat_ttime', 0.5001, 179.9999),
                        prior('latq_co', 0.0001, 0.9999),
@@ -104,7 +104,7 @@ class spot_swat():
                        prior('fr_hum_act', 0.0001, 0.9999),
                        prior('hum_c_n', 8.0001, 11.9999),
                        prior('nitrate', 0.0001, 99.9999),
-                       prior('ovn', 0.0101, 0.6999),  # 29
+                       prior('ovn', 0.0101, 0.6999), #29
                        prior('denit_exp', 0.0001, 2.9999),
                        prior('denit_frac', 0.0001, 0.9999),
                        prior('evap_adj', 0.5001, 0.9999),
@@ -114,7 +114,7 @@ class spot_swat():
                        prior('msk_x', 0.0001, 0.2999),
                        prior('n_fix_max', 1.0001, 19.9999),
                        prior('n_perc', 0.0001, 0.9999),
-                       prior('n_uptake', 0.0001, 99.9999),  # 39
+                       prior('n_uptake', 0.0001, 99.9999), #39
                        prior('nperco_lchtile', 0.0001, 0.9999),
                        prior('orgn_min', 0.0011, 0.0029),
                        prior('rsd_cover', 0.1001, 0.4999),
@@ -124,7 +124,7 @@ class spot_swat():
                        prior('surq_exp', 1.0001, 2.9999),
                        prior('surq_lag', 1.0001, 23.9999),
                        prior('sw_init', 0.0001, 0.9999),
-                       prior('cov50', 0.0001, 0.90),  # 49
+                       prior('cov50', 0.0001, 0.90), #49
                        prior('fall_tmp', -4.9999, 4.9999),
                        prior('melt_max_min', 0.0001, 9.9999),
                        prior('melt_tmp', -4.9999, 4.9999),
@@ -134,122 +134,125 @@ class spot_swat():
                        prior('dist', 7600.0001, 29999.9999),
                        prior('dp', 0.0001, 5999.9999),
                        prior('drain', 10.0001, 50.9999),
-                       prior('lag', 0.0001, 99.9999),  # 59
+                       prior('lag', 0.0001, 99.9999), #59
                        prior('lat_kast', 0.0101, 3.9999),
                        prior('pump', 0.0001, 9.9999),
                        prior('rad', 3.0001, 39.9999),
                        prior('t_fc', 0.0001, 99.9999),
-                       prior('fert', 0.0001, 999.9999),
+                       prior('fert_5', 0.0001, 999.9999),
+                       prior('fert_6', 0.0001, 999.9999),
+                       prior('fert_7', 0.0001, 999.9999),
                        prior('rsd_init', 0.0001, 9999.9999),
                        prior('awc', 0.0001, 0.9999),
                        prior('soil_k', 0.0001, 1999.9999),
                        ]
-
     def parameters(self):
         return sp.parameter.generate(self.params)
 
     def simulation(self, vector):
         par = np.array(vector)
-        params = {"aquifer.aqu": ("name", [(None, 'alpha_bf', par[0]),
-                                           (None, 'bf_max', par[1]),
-                                           (None, 'dep_bot', par[2]),
-                                           (None, 'dep_wt', par[3]),
-                                           (None, 'flo_dist', par[4]),
-                                           (None, 'flo_min', par[5]),
-                                           (None, 'gw_flo', par[6]),
-                                           (None, 'no3_n', par[7]),
-                                           (None, 'rchg_dp', par[8]),
-                                           (None, 'revap', par[9]),
-                                           (None, 'revap_min', par[10]),
-                                           (None, 'spec_yld', par[11]),
-                                           (None, 'hl_no3n', par[12]),
-                                           ],
-                                  ),
-                  "cntable.lum": ("description", [(None, "cn_a", par[13]),
-                                                  (None, "cn_b", par[14]),
-                                                  (None, "cn_c", par[15]),
-                                                  (None, "cn_d", par[16]),
-                                                  ],
-                                  ),
-                  "hydrology.hyd": ("name", [(None, 'can_max', par[17]),
-                                             (None, 'cn3_swf', par[18]),
-                                             (None, 'epco', par[19]),
-                                             (None, 'esco', par[20]),
-                                             (None, 'lat_ttime', par[21]),
-                                             (None, 'latq_co', par[22]),
-                                             (None, 'perco', par[23]),
-                                             (None, 'pet_co', par[24]),
+        params = {"aquifer.aqu":("name", [(None, 'alpha_bf', par[0]),
+                                          (None, 'bf_max', par[1]),
+                                          (None, 'dep_bot', par[2]),
+                                          (None, 'dep_wt', par[3]),
+                                          (None, 'flo_dist', par[4]),
+                                          (None, 'flo_min', par[5]),
+                                          (None, 'gw_flo', par[6]),
+                                          (None, 'no3_n', par[7]),
+                                          (None, 'rchg_dp', par[8]),
+                                          (None, 'revap', par[9]),
+                                          (None, 'revap_min', par[10]),
+                                          (None, 'spec_yld', par[11]),
+                                          (None, 'hl_no3n', par[12]),
+                                          ],
+                                 ),
+                  "cntable.lum":("description", [(None,"cn_a", par[13]),
+                                                 (None,"cn_b", par[14]),
+                                                 (None,"cn_c", par[15]),
+                                                 (None,"cn_d", par[16]),
+                                                 ],
+                                 ),
+                  "hydrology.hyd":("name", [(None, 'can_max', par[17]),
+                                            (None, 'cn3_swf', par[18]),
+                                            (None, 'epco', par[19]),
+                                            (None, 'esco', par[20]),
+                                            (None, 'lat_ttime', par[21]),
+                                            (None, 'latq_co', par[22]),
+                                            (None, 'perco', par[23]),
+                                            (None, 'pet_co', par[24]),
+                                            ],
+                                   ),
+                  "nutrients.sol":("name", [(None, 'exp_co', par[25]),
+                                            (None, 'fr_hum_act', par[26]),
+                                            (None, 'hum_c_n', par[27]),
+                                            (None, 'nitrate', par[28]),
+                                            ],
+                                   ),
+                  "ovn_table.lum":("name", [(None, 'ovn_mean', par[29]),
+                                            (None, 'ovn_min', par[29]),
+                                            (None, 'ovn_max', par[29])
+                                            ],
+                                   ),
+                  "parameters.bsn":("igen", [(None, 'denit_exp', par[30]),
+                                             (None, 'denit_frac', par[31]),
+                                             (None, 'evap_adj', par[32]),
+                                             (None, 'lai_noevap', par[33]),
+                                             (None, 'msk_co1', par[34]),
+                                             (None, 'msk_co2', par[35]),
+                                             (None, 'msk_x', par[36]),
+                                             (None, 'n_fix_max', par[37]),
+                                             (None, 'n_perc', par[38]),
+                                             (None, 'n_uptake', par[39]),
+                                             (None, 'nperco_lchtile', par[40]),
+                                             (None, 'orgn_min', par[41]),
+                                             (None, 'rsd_cover', par[42]),
+                                             (None, 'rsd_decay', par[43]),
+                                             (None, 'rsd_decomp', par[44]),
+                                             (None, 'scoef', par[45]),
+                                             (None, 'surq_exp', par[46]),
+                                             (None, 'surq_lag', par[47]),
+                                             (None, 'sw_init', par[48]),
                                              ],
                                     ),
-                  "nutrients.sol": ("name", [(None, 'exp_co', par[25]),
-                                             (None, 'fr_hum_act', par[26]),
-                                             (None, 'hum_c_n', par[27]),
-                                             (None, 'nitrate', par[28]),
-                                             ],
-                                    ),
-                  "ovn_table.lum": ("name", [(None, 'ovn_mean', par[29]),
-                                             (None, 'ovn_min', par[29]),
-                                             (None, 'ovn_max', par[29])
-                                             ],
-                                    ),
-                  "parameters.bsn": ("igen", [(None, 'denit_exp', par[30]),
-                                              (None, 'denit_frac', par[31]),
-                                              (None, 'evap_adj', par[32]),
-                                              (None, 'lai_noevap', par[33]),
-                                              (None, 'msk_co1', par[34]),
-                                              (None, 'msk_co2', par[35]),
-                                              (None, 'msk_x', par[36]),
-                                              (None, 'n_fix_max', par[37]),
-                                              (None, 'n_perc', par[38]),
-                                              (None, 'n_uptake', par[39]),
-                                              (None, 'nperco_lchtile', par[40]),
-                                              (None, 'orgn_min', par[41]),
-                                              (None, 'rsd_cover', par[42]),
-                                              (None, 'rsd_decay', par[43]),
-                                              (None, 'rsd_decomp', par[44]),
-                                              (None, 'scoef', par[45]),
-                                              (None, 'surq_exp', par[46]),
-                                              (None, 'surq_lag', par[47]),
-                                              (None, 'sw_init', par[48]),
-                                              ],
-                                     ),
-                  "snow.sno": ("name", [(None, 'cov50', par[49]),
-                                        (None, 'fall_tmp', par[50]),
-                                        (None, 'melt_max', par[51]),
-                                        (None, 'melt_min', par[51]),
-                                        (None, 'melt_tmp', par[52]),
-                                        (None, 'snow_h2o', par[53]),
-                                        (None, 'snow_init', par[54]),
-                                        (None, 'tmp_lag', par[55]),
-                                        ],
-                               ),
-                  "tiledrain.str": ("name", [(None, 'dist', par[56]),
-                                             (None, 'dp', par[57]),
-                                             (None, 'drain', par[58]),
-                                             (None, 'lag', par[59]),
-                                             (None, 'lat_ksat', par[60]),
-                                             (None, 'pump', par[61]),
-                                             (None, 'rad', par[62]),
-                                             (None, 't_fc', par[63]),
-                                             ],
-                                    ),
+                  "snow.sno":("name", [(None, 'cov50', par[49]),
+                                       (None, 'fall_tmp', par[50]),
+                                       (None, 'melt_max', par[51]),
+                                       (None, 'melt_min', par[51]),
+                                       (None, 'melt_tmp', par[52]),
+                                       (None, 'snow_h2o', par[53]),
+                                       (None, 'snow_init', par[54]),
+                                       (None, 'tmp_lag', par[55]),
+                                       ],
+                              ),
+                  "tiledrain.str":("name", [(None, 'dist', par[56]),
+                                            (None, 'dp', par[57]),
+                                            (None, 'drain', par[58]),
+                                            (None, 'lag', par[59]),
+                                            (None, 'lat_ksat', par[60]),
+                                            (None, 'pump', par[61]),
+                                            (None, 'rad', par[62]),
+                                            (None, 't_fc', par[63]),
+                                            ],
+                                   ),
 
                   }
-        tpl_params = {"lum.dtl.tpl": {"fert": par[64]},
-                      "plant.ini.tpl": {"rsd_init": par[65]},
-                      "soils.sol.tpl": {"awc": par[66],
-                                        "soil_k": par[67]}
+        tpl_params = {"management.sch.tpl": {"fert_5": par[64],
+                                             "fert_6": par[65],
+                                             "fert_7": par[66],
+                                             },
+                      "plant.ini.tpl": {"rsd_init": par[67]},
+                      "soils.sol.tpl": {"awc": par[68],
+                                        "soil_k": par[69]},
                       }
         sim = huron_swat(self.reader, params, tpl_params, self.copy_path,
                          show_output=self.show_output, delete_copy=self.delete_copy)
-        return sim["no3_lat"] * 90643.0
+        return sim["no3_lat"]*90643.0
 
     def evaluation(self):
         obs = pd.read_csv(os.path.join(cwd,'TimeSeries\\monthly_load.csv'))
         obs["Date"] = pd.to_datetime(obs["Date"])
         obs = obs.loc[((obs["Date"] >= self.start) & (obs["Date"] <= self.end)),("Load_COND_min", "Load_COND_max")]
         return obs
-
     def objectivefunction(self, simulation, evaluation):
         if not self.obj_func:
             like = sp.objectivefunctions.nashsutcliffe(evaluation, simulation)
@@ -284,7 +287,7 @@ def obj_func(evaluation, simulation):
                           evaluation.iloc[:, 1] - simulation,
                           0)
                  )
-    return np.sqrt(np.mean(e**2))
+    return -np.sqrt(np.mean(e**2))
 
 # 实例化及采样
 spot_setup = spot_swat(proj_path, copy_path, start_print, end_print, obj_func=obj_func,
@@ -300,7 +303,7 @@ sampler = sp.algorithms.rope(spot_setup,
                               parallel="mpi",
                               )
 # print(describe(sampler))
-r_hat = sampler.sample(repetitions=1200,
+sampler.sample(repetitions=1200,
                        # ngs=70,
                        )
 print("============= Successfully done! =================")

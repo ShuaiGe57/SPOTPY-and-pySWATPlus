@@ -2,8 +2,11 @@
  CHK                       checker.out
  CROP                      crop_yld_yr.txt
  CROP                      crop_yld_aa.txt
+ AQUIFER                   aquifer_day.txt
+ AQUIFER                   aquifer_mon.txt
  SWAT-DEG_CHANNEL          channel_sd_day.txt
  DTBL                      lu_change_out.txt
  BASIN_CROP_YLD            basin_crop_yld_yr.txt
  BASIN_CROP_YLD            basin_crop_yld_aa.txt
+ BASIN_AQUIFER             basin_aqu_day.txt
  BASIN_AQUIFER             basin_aqu_mon.txt
