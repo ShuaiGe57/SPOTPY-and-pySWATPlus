@@ -28,6 +28,7 @@ from pySWATPlus.TxtinoutReader import TxtinoutReader
 from pySWATPlus.FileReader import FileReader
 from matplotlib import pyplot as plt
 from datetime import datetime
+from tqdm import tqdm
 
 # cwd = "E:/SPOTPY-and-pySWATPlus"
 cwd = "E:/BaiduSyncdisk/Code/Python/SPOTPY-and-pySWATPlus"
@@ -37,26 +38,36 @@ cwd = "E:/BaiduSyncdisk/Code/Python/SPOTPY-and-pySWATPlus"
 # In[10]:
 
 
-def huron_swat(reader, params, tpl_params, copy_path, show_output=False, delete_copy=True):
+def huron_swat(reader, params, tpl_params, copy_path, output_scale="day", show_output=False, delete_copy=True):
     result = reader.copy_and_run(dir=copy_path,
                                  params=params,
                                  tpl_params=tpl_params,
                                  show_output=show_output
                                  )
-    reader = FileReader(os.path.join(result, "basin_aqu_mon.txt"),
-                        has_units=True,
+    reader = FileReader(os.path.join(result, "basin_aqu_day.txt"),
+                        has_units = True,
                         index=None,
                         usecols=["mon", "day", "yr", "unit", "no3_lat"],
                         filter_by={"unit": 1}
                         )
     res = reader.df
-    res["Date"] = pd.to_datetime(pd.DataFrame({"year": res["yr"],
-                                               "month": res["mon"],
-                                               "day": res["day"]}))
-    res.drop(columns=["mon", "day", "yr", "unit"], inplace=True)
+    if output_scale == "mon":
+        res = (res.
+               groupby(["yr", "mon"]).
+               agg({"no3_lat": np.sum}).
+               reset_index())
+        res["Date"] = pd.to_datetime(pd.DataFrame({"year": res["yr"],
+                                                   "month": res["mon"],
+                                                   "day": 1}))
+        res.drop(columns=["yr", "mon"], inplace=True)
+    elif output_scale == "day":
+        res["Date"] = pd.to_datetime(pd.DataFrame({"year": res["yr"],
+                                                   "month": res["mon"],
+                                                   "day": res["day"]}))
+        res.drop(columns=["mon", "day", "yr", "unit"], inplace=True)
     if delete_copy:
         shutil.rmtree(result, ignore_errors=True)
-    os.chdir(cwd)  # 改回当前路径
+    os.chdir(cwd) #改回当前路径
     return res
 
 
@@ -66,12 +77,13 @@ def huron_swat(reader, params, tpl_params, copy_path, show_output=False, delete_
 
 class spot_swat():
     def __init__(self, TxtInOut_abspath, copy_path, start_print, end_print,
-                 prior=sp.parameter.Uniform, obj_func=None,
+                 output_scale="day", prior=sp.parameter.Uniform, obj_func=None,
                  show_output=False, delete_copy=True):
         self.reader = TxtinoutReader(TxtInOut_abspath)
         self.copy_path = copy_path
         self.start = start_print
         self.end = end_print
+        self.output_scale = output_scale
         self.obj_func = obj_func
         self.show_output = show_output
         self.delete_copy = delete_copy
@@ -264,13 +276,18 @@ class spot_swat():
                                         "soil_k": par[78]},
                       }
         sim = huron_swat(self.reader, params, tpl_params, self.copy_path,
-                         show_output=self.show_output, delete_copy=self.delete_copy)
+                         output_scale=self.output_scale,
+                         show_output=self.show_output,
+                         delete_copy=self.delete_copy)
         return sim["no3_lat"]*90643.0
 
     def evaluation(self):
-        obs = pd.read_csv(os.path.join(cwd,'TimeSeries\\monthly_load.csv'))
+        if self.output_scale == "day":
+            obs = pd.read_csv(os.path.join(cwd,'TimeSeries\\daily_load.csv'))
+        elif self.output_scale == "mon":
+            obs = pd.read_csv(os.path.join(cwd,'TimeSeries\\monthly_load.csv'))
         obs["Date"] = pd.to_datetime(obs["Date"])
-        obs = obs.loc[((obs["Date"] >= self.start) & (obs["Date"] <= self.end)),("Load_COND_min", "Load_COND_max")]
+        obs = obs.loc[((obs["Date"] >= datetime.strptime(self.start, "%Y-%m-%d")) & (obs["Date"] <= datetime.strptime(self.end, "%Y-%m-%d"))),("Load_COND_min", "Load_COND_max")]
         return obs
     def objectivefunction(self, simulation, evaluation):
         if not self.obj_func:
@@ -281,49 +298,59 @@ class spot_swat():
 
 
 # In[12]:
-# 源文件路径和复制文件路径
-proj_path = os.path.join(cwd, "Cal_TxtInOut")
-copy_path = os.path.join(cwd, "Cal_copy")
+if __name__ == "__main__":
+    # 源文件路径和复制文件路径
+    proj_path = os.path.join(cwd, "Cal_TxtInOut")
+    copy_path = os.path.join(cwd, "Cal_copy")
 
-# 设置SWAT模拟时间范围
-start_sim = "2017-01-01"
-end_sim = "2020-12-31"
+    # 设置SWAT模拟时间范围
+    start_sim = "2017-01-01"
+    end_sim = "2020-12-31"
 
-# 设置SWAT输出时间范围
-start_print = "2018-01-01"
-end_print = "2020-12-31"
+    # 设置SWAT输出时间范围
+    start_print = "2018-02-01"
+    end_print = "2020-12-31"
+    warmup = 1
 
-# 输出选项
-show_output = False
-delete_copy = True
+    # 设置输出时间尺度
+    output_scale = "day"
 
-# 目标函数
+    # 输出选项
+    show_output = False
+    delete_copy = True
 
-def obj_func(evaluation, simulation):
-    e = np.where(simulation < evaluation.iloc[:, 0],
-                 evaluation.iloc[:, 0] - simulation,
-                 np.where(simulation > evaluation.iloc[:, 1],
-                          evaluation.iloc[:, 1] - simulation,
-                          0)
-                 )
-    o = np.zeros_like(e)
-    return gauss(o, e)
+    # 目标函数
+    def obj_func(evaluation, simulation):
+        evaluation = np.array(evaluation)
+        simulation = np.array(simulation)
+        e = np.where(simulation < evaluation[:, 0],
+                     evaluation[:, 0] - simulation,
+                     np.where(simulation > evaluation[:, 1],
+                              evaluation[:, 1] - simulation,
+                              0)
+                     )
+        o = np.zeros_like(e)
+        return gauss(o, e)
 
-# 实例化及采样
-spot_setup = spot_swat(proj_path, copy_path, start_print, end_print, obj_func=obj_func,
-                       show_output=show_output, delete_copy=delete_copy)
+    # 实例化及采样
+    spot_setup = spot_swat(proj_path, copy_path, start_print, end_print,
+                           obj_func=obj_func, output_scale=output_scale,
+                           show_output=show_output, delete_copy=delete_copy)
 
-# spot_setup.reader.set_simulation_time(start_sim, end_sim)
-# spot_setup.reader.set_print_time(start_print, end_print)
-# spot_setup.reader.enable_object_in_print_prt("channel_sd", True, False, False, False)
+    # spot_setup.reader.set_simulation_time(start_sim, end_sim)
+    # spot_setup.reader.set_print_time(start_print, end_print, warmup)
+    # spot_setup.reader.enable_object_in_print_prt("basin_aqu", True, False, False, False)
 
-sampler = sp.algorithms.dream(spot_setup,
-                              dbname="Cal",
-                              dbformat="csv",
-                              parallel="mpi",
-                              )
-# print(describe(sampler))
-r_hat = sampler.sample(repetitions=1000,
-                       # ngs=70,
-                       )
-print("============= Successfully done! =================")
+    sampler = sp.algorithms.sceua(spot_setup,
+                                  dbname="Cal",
+                                  dbformat="csv",
+                                  parallel="mpc",
+                                  )
+    # print(describe(sampler))
+    rep = 5000
+    ngs = 80
+    sampler.sample(rep,
+                   ngs,
+                   )
+
+    print("============= Successfully done! =================")
