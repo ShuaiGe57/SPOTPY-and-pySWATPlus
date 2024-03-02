@@ -4,14 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d7c7b972-b7d8-4869-bbac-390f38f6daef" name="更改" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cal.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Cal.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cal.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/Cal.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cal.py" beforeDir="false" afterPath="$PROJECT_DIR$/Cal.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cal_TxtInOut/print.prt" beforeDir="false" afterPath="$PROJECT_DIR$/Cal_TxtInOut/print.prt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TimeSeries/Monthly_load.csv" beforeDir="false" afterPath="$PROJECT_DIR$/TimeSeries/Monthly_load.csv" afterDir="false" />
-    </list>
+    <list default="true" id="d7c7b972-b7d8-4869-bbac-390f38f6daef" name="更改" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -31,23 +24,23 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python.Cal.executor": "Run",
-    "Python.SA.executor": "Profiler",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "E:/BaiduSyncdisk/Code/Python/SPOTPY-and-pySWATPlus",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python.Cal.executor&quot;: &quot;Run&quot;,
+    &quot;Python.SA.executor&quot;: &quot;Profiler&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;E:/BaiduSyncdisk/Code/Python/SPOTPY-and-pySWATPlus&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected="Python.Cal">
     <configuration name="Cal" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="SPOTPY-and-pySWATPlus" />
