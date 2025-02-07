@@ -1,0 +1,22 @@
+ovn_table.lum: written by SWAT+ editor v2.3.3 on 2024-02-20 10:44 for SWAT+ rev.60.5.7
+              name             ovn_mean              ovn_min              ovn_max                        description
+      fallow_nores             0.486476             0.486476             0.486476                  Fallow_no_residue
+    convtill_nores             0.486476             0.486476             0.486476    Conventional_tillage_no_residue
+      convtill_res             0.486476             0.486476             0.486476       Conventional_tillage_residue
+    chisplow_nores             0.486476             0.486476             0.486476             Chisel_plow_no_residue
+      chisplow_res             0.486476             0.486476             0.486476                Chisel_plow_residue
+      falldisk_res             0.486476             0.486476             0.486476               Fall_disking_residue
+      notill_nores             0.486476             0.486476             0.486476                 No_till_no_residue
+   notill_0.5-1res             0.486476             0.486476             0.486476         No_till_0.5-1_t/ha_residue
+     notill_2-9res             0.486476             0.486476             0.486476           No_till_2-9_t/ha_residue
+      range_sparse             0.486476             0.486476             0.486476             Rangeland_sparse_cover
+     range_20cover             0.486476             0.486476             0.486476                Rangeland_20%_cover
+        shortgrass             0.486476             0.486476             0.486476                Short_grass_prairie
+        densegrass             0.486476             0.486476             0.486476                        Dense_grass
+      bermudagrass             0.486476             0.486476             0.486476                       Bermudagrass
+      forest_light             0.486476             0.486476             0.486476                  Forest_light_fair
+        forest_med             0.486476             0.486476             0.486476                Forest_medimum_good
+      forest_heavy             0.486476             0.486476             0.486476                       Forest_heavy
+     urban_asphalt             0.486476             0.486476             0.486476                      Urban_asphalt
+    urban_concrete             0.486476             0.486476             0.486476                     Urban_concrete
+      urban_rubble             0.486476             0.486476             0.486476                       Urban_rubble

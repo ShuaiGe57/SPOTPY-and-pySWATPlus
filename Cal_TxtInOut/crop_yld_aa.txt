@@ -1,5 +1,0 @@
- Huron                    
-  SWAT+ Jun 13 2023       MODULAR Rev 2023.60.5.7                               
-  
-                                                                            --YIELD (kg/ha)--
-  jday   mon   day    yr    unit PLANTNM                         MASS          C           N           P
